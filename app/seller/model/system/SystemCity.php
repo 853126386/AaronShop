@@ -7,7 +7,7 @@ use crmeb\basic\BaseModel;
 
 /**
  * 菜单  model
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\seller\model\system
  */
 class SystemCity extends BaseModel

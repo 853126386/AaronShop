@@ -11,7 +11,7 @@ use crmeb\basic\BaseModel;
 use think\facade\Session;
 
 /**
- * Class SystemAdmin
+ * Class SystemSellerAdmin
  * @package app\admin\model\system
  */
 class SystemAdmin extends BaseModel

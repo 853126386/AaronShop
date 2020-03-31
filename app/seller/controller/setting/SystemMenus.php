@@ -5,12 +5,12 @@ namespace app\seller\controller\setting;
 use app\seller\controller\AuthController;
 use crmeb\traits\CurdControllerTrait;
 use think\facade\Route as Url;
-use app\seller\model\system\SystemMenus as MenusModel;
+use app\seller\model\system\SystemSellerMenus as MenusModel;
 use crmeb\services\{FormBuilder as Form, UtilService as Util, JsonService as Json};
 
 /**
  * 菜单管理控制器
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\seller\controller\system
  */
 class SystemMenus extends AuthController

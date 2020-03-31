@@ -9,7 +9,7 @@ use think\facade\Route as Url;
 
 /**
  * 身份管理  控制器
- * Class SystemRole
+ * Class SystemSellerRole
  * @package app\admin\controller\setting
  */
 class SystemRole extends AuthController

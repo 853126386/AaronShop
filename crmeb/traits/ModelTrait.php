@@ -108,7 +108,6 @@ trait ModelTrait
             $params = $eachFn;
             $eachFn = null;
         }
-
         if (is_callable($model)) {
             $eachFn = $model;
             $model = null;

@@ -11,7 +11,7 @@ use crmeb\basic\BaseModel;
 
 /**
  * 身份管理 model
- * Class SystemRole
+ * Class SystemSellerRole
  * @package app\admin\model\system
  */
 class SystemRole extends BaseModel

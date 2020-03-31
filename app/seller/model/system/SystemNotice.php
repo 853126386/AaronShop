@@ -93,7 +93,7 @@ class SystemNotice extends BaseModel
         if (!$noticeInfo) return self::setErrorInfo('通知模板消息不存在!');
         $adminIds = array_merge(array_map(function ($v) {
             return $v['id'];
-        }, SystemAdmin::getTopAdmin('id')->toArray()) ?: [], self::typeByAdminList($noticeType, 'push_admin')->push_admin ?: []);
+        }, SystemSellerAdmin::getTopAdmin('id')->toArray()) ?: [], self::typeByAdminList($noticeType, 'push_admin')->push_admin ?: []);
         $adminIds = array_unique(array_filter($adminIds));
         if (!count($adminIds)) return self::setErrorInfo('没有有效的通知用户!');
         foreach ($adminIds as $id) {

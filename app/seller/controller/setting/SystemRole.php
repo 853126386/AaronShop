@@ -3,13 +3,12 @@
 namespace app\seller\controller\setting;
 
 use app\seller\controller\AuthController;
-use app\seller\model\system\{SystemMenus, SystemRole as RoleModel};
+use app\seller\model\system\{SystemSellerMenus,SystemSellerAdmin, SystemSellerRole as RoleModel};
 use crmeb\services\{UtilService as Util, JsonService as Json};
 use think\facade\Route as Url;
-
 /**
  * 身份管理  控制器
- * Class SystemRole
+ * Class SystemSellerRole
  * @package app\seller\controller\setting
  */
 class SystemRole extends AuthController
@@ -21,12 +20,14 @@ class SystemRole extends AuthController
      */
     public function index()
     {
+//        dd(SystemSellerAdmin::find($this->adminId)->sellerRole->seller_admin_id);
         $where = Util::getMore([
             ['status', ''],
             ['role_name', ''],
         ], $this->request);
         $where['level'] = $this->adminInfo['level'];
         $this->assign('where', $where);
+//        dump(RoleModel::systemPage($where));exit;
         $this->assign(RoleModel::systemPage($where));
         return $this->fetch();
     }
@@ -43,7 +44,7 @@ class SystemRole extends AuthController
 //        }else{
 //            dump($this->adminInfo['level']);
 //        }
-        $menus = $this->adminInfo['level'] == 0 ? SystemMenus::ruleList() : SystemMenus::rolesByRuleList($this->adminInfo['roles']);
+        $menus = $this->adminInfo['level'] == 0 ? SystemSellerMenus::ruleList() : SystemSellerMenus::rolesByRuleList($this->adminInfo['roles']);
         $this->assign(['menus' => json($menus)->getContent(), 'saveUrl' => Url::buildUrl('save')]);
         return $this->fetch();
     }
@@ -65,7 +66,7 @@ class SystemRole extends AuthController
         if (!is_array($data['rules']) || !count($data['rules']))
             return Json::fail('请选择最少一个权限');
         foreach ($data['rules'] as $v) {
-            $pid = SystemMenus::where('id', $v)->value('pid');
+            $pid = SystemSellerMenus::where('id', $v)->value('pid');
             if (!in_array($pid, $data['rules'])) $data['rules'][] = $pid;
         }
         $data['rules'] = implode(',', $data['rules']);
@@ -95,7 +96,7 @@ class SystemRole extends AuthController
     {
         //
         $role = RoleModel::get($id);
-        $menus = $this->adminInfo['level'] == 0 ? SystemMenus::ruleList() : SystemMenus::rolesByRuleList($this->adminInfo['roles']);
+        $menus = $this->adminInfo['level'] == 0 ? SystemSellerMenus::ruleList() : SystemSellerMenus::rolesByRuleList($this->adminInfo['roles']);
         $this->assign(['role' => $role->toJson(), 'menus' => json($menus)->getContent(), 'updateUrl' => Url::buildUrl('update', array('id' => $id))]);
         return $this->fetch();
     }
@@ -118,7 +119,7 @@ class SystemRole extends AuthController
         if (!is_array($data['rules']) || !count($data['rules']))
             return Json::fail('请选择最少一个权限');
         foreach ($data['rules'] as $v) {
-            $pid = SystemMenus::where('id', $v)->value('pid');
+            $pid = SystemSellerMenus::where('id', $v)->value('pid');
             if (!in_array($pid, $data['rules'])) $data['rules'][] = $pid;
         }
         $data['rules'] = implode(',', $data['rules']);

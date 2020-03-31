@@ -8,7 +8,7 @@ use lib\help\Arr;
 
 /**
  * 菜单  model
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\admin\model\system
  */
 class ShippingTemplatesFree extends BaseModel

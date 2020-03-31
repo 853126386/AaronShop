@@ -12,7 +12,7 @@ use think\facade\Route as Url;
 
 /**
  * 菜单  model
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\admin\model\system
  */
 class SystemMenus extends BaseModel

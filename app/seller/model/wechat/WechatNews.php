@@ -5,7 +5,7 @@
  */
 namespace app\seller\model\wechat;
 
-use app\seller\model\system\SystemAdmin;
+use app\seller\model\system\SystemSellerAdmin;
 use crmeb\traits\ModelTrait;
 use crmeb\basic\BaseModel;
 use think\facade\Db;
@@ -47,7 +47,7 @@ class WechatNews extends BaseModel
         }
         $model = $model->where('status',1)->where('hide',0);
         return self::page($model,function($item){
-            $item['admin_name'] = '总后台管理员---》'.SystemAdmin::where('id',$item['admin_id'])->value('real_name');
+            $item['admin_name'] = '总后台管理员---》'.SystemSellerAdmin::where('id',$item['admin_id'])->value('real_name');
             $item['content'] = Db::name('wechatNewsContent')->where('nid',$item['id'])->value('content');
         },$where);
     }

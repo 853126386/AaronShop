@@ -7,7 +7,7 @@ use crmeb\basic\BaseModel;
 
 /**
  * 菜单  model
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\admin\model\system
  */
 class ShippingTemplates extends BaseModel

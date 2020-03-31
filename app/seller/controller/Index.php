@@ -5,7 +5,7 @@ namespace app\seller\controller;
 use FormBuilder\Json;
 use think\facade\Config;
 use app\seller\model\order\StoreOrder as StoreOrderModel;//订单
-use app\seller\model\system\{SystemConfig, SystemMenus, SystemRole};
+use app\seller\model\system\{SystemConfig, SystemSellerMenus, SystemSellerRole};
 use app\seller\model\user\{User, UserExtract as UserExtractModel, User as UserModel};
 use app\seller\model\store\{StoreProduct, StoreProductReply as StoreProductReplyModel, StoreProduct as ProductModel};
 
@@ -25,10 +25,10 @@ class Index extends AuthController
         $site_logo = SystemConfig::getOneConfig('menu_name', 'site_logo')->toArray();
 
         $this->assign([
-            'menuList' => SystemMenus::menuList(),
+            'menuList' => SystemSellerMenus::menuList(),
             'site_logo' => json_decode($site_logo['value'], true),
             'new_order_audio_link' => sys_config('new_order_audio_link'),
-            'role_name' => SystemRole::where('id', $roles[0])->field('role_name')->find(),
+            'role_name' => SystemSellerRole::where('id', $roles[0])->field('role_name')->find(),
             'workermanPort' => Config::get('workerman.admin.port')
         ]);
         return $this->fetch();

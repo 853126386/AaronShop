@@ -8,7 +8,7 @@ use app\models\system\SystemCity;
 
 /**
  * 菜单  model
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\admin\model\system
  */
 class ShippingTemplatesRegion extends BaseModel

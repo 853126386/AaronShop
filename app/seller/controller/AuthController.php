@@ -2,9 +2,9 @@
 
 namespace app\seller\controller;
 
-use app\seller\model\system\SystemAdmin;
-use app\seller\model\system\SystemMenus;
-use app\seller\model\system\SystemRole;
+use app\seller\model\system\SystemSellerAdmin;
+use app\seller\model\system\SystemSellerMenus;
+use app\seller\model\system\SystemSellerRole;
 use think\facade\Route as Url;
 
 /**
@@ -37,16 +37,16 @@ class AuthController extends SystemBasic
     protected function initialize()
     {
         parent::initialize();
-        if (!SystemAdmin::hasActiveAdmin()) return $this->redirect(Url::buildUrl('login/index')->suffix(false)->build());
+        if (!SystemSellerAdmin::hasActiveAdmin()) return $this->redirect(Url::buildUrl('login/index')->suffix(false)->build());
         try {
-            $adminInfo = SystemAdmin::activeAdminInfoOrFail();
+            $adminInfo = SystemSellerAdmin::activeAdminInfoOrFail();
         } catch (\Exception $e) {
-            return $this->failed(SystemAdmin::getErrorInfo($e->getMessage()), Url::buildUrl('login/index')->suffix(false)->build());
+            return $this->failed(SystemSellerAdmin::getErrorInfo($e->getMessage()), Url::buildUrl('login/index')->suffix(false)->build());
         }
         $this->adminInfo = $adminInfo;
         $this->adminId = $adminInfo['id'];
         $this->getActiveAdminInfo();
-        $this->auth = SystemAdmin::activeAdminAuthOrFail();
+        $this->auth = SystemSellerAdmin::activeAdminAuthOrFail();
         $this->adminInfo->level === 0 || $this->checkAuth();
         $this->assign('_admin', $this->adminInfo);
         $type = 'system';
@@ -57,14 +57,14 @@ class AuthController extends SystemBasic
     protected function checkAuth($action = null, $controller = null, $module = null, array $route = [])
     {
         static $allAuth = null;
-        if ($allAuth === null) $allAuth = SystemRole::getAllAuth();
+        if ($allAuth === null) $allAuth = SystemSellerRole::getAllAuth();
         if ($module === null) $module = app('http')->getName();
         if ($controller === null) $controller = $this->request->controller();
         if ($action === null) $action = $this->request->action();
         if (!count($route)) $route = $this->request->route();
         if (in_array(strtolower($controller), $this->skipLogController, true)) return true;
-        $nowAuthName = SystemMenus::getAuthName($action, $controller, $module, $route);
-        $baseNowAuthName = SystemMenus::getAuthName($action, $controller, $module, []);
+        $nowAuthName = SystemSellerMenus::getAuthName($action, $controller, $module, $route);
+        $baseNowAuthName = SystemSellerMenus::getAuthName($action, $controller, $module, []);
         if ((in_array($nowAuthName, $allAuth) && !in_array($nowAuthName, $this->auth)) || (in_array($baseNowAuthName, $allAuth) && !in_array($baseNowAuthName, $this->auth)))
             exit($this->failed('没有权限访问!'));
         return true;
@@ -73,15 +73,15 @@ class AuthController extends SystemBasic
 
     /**
      * 获得当前用户最新信息
-     * @return SystemAdmin
+     * @return SystemSellerAdmin
      */
     protected function getActiveAdminInfo()
     {
         $adminId = $this->adminId;
-        $adminInfo = SystemAdmin::getValidAdminInfoOrFail($adminId);
-        if (!$adminInfo) $this->failed(SystemAdmin::getErrorInfo('请登陆!'));
+        $adminInfo = SystemSellerAdmin::getValidAdminInfoOrFail($adminId);
+        if (!$adminInfo) $this->failed(SystemSellerAdmin::getErrorInfo('请登陆!'));
         $this->adminInfo = $adminInfo;
-        SystemAdmin::setLoginInfo($adminInfo);
+        SystemSellerAdmin::setLoginInfo($adminInfo);
         return $adminInfo;
     }
 }

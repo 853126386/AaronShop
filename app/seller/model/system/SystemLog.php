@@ -61,8 +61,8 @@ class SystemLog extends BaseModel
                 'admin_id'=>$adminId,
                 'add_time'=>time(),
                 'admin_name'=>$adminName,
-                'path'=>SystemMenus::getAuthName($action,$controller,$module,$route),
-                'page'=>SystemMenus::getVisitName($action,$controller,$module,$route)?:'未知',
+                'path'=>SystemSellerMenus::getAuthName($action,$controller,$module,$route),
+                'page'=>SystemSellerMenus::getVisitName($action,$controller,$module,$route)?:'未知',
                 'ip'=>$request->ip(),
                 'type'=>$type
             ];
@@ -97,7 +97,7 @@ class SystemLog extends BaseModel
         $data = [
             'method'=>$request->method(),
             'admin_id'=>$adminInfo['id'],
-            'path'=>SystemMenus::getAuthName($action,$controller,$module,$route),
+            'path'=>SystemSellerMenus::getAuthName($action,$controller,$module,$route),
             'page'=>$page,
             'ip'=>$request->ip()
         ];
@@ -118,7 +118,7 @@ class SystemLog extends BaseModel
         if($where['admin_id'] != '')
             $adminIds = $where['admin_id'];
         else
-            $adminIds = SystemAdmin::where('level','>=',$where['level'])->column('id','id');
+            $adminIds = SystemSellerAdmin::where('level','>=',$where['level'])->column('id','id');
         $model = $model->where('l.admin_id','IN',$adminIds);
         if($where['data'] !== ''){
             list($startTime,$endTime) = explode(' - ',$where['data']);

@@ -9,7 +9,7 @@ use crmeb\services\{FormBuilder as Form, UtilService as Util, JsonService as Jso
 
 /**
  * 物流公司管理控制器
- * Class SystemMenus
+ * Class SystemSellerMenus
  * @package app\admin\controller\system
  */
 class Express extends AuthController

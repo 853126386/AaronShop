@@ -4,12 +4,12 @@ namespace app\seller\controller\setting;
 
 use app\seller\controller\AuthController;
 use crmeb\services\{FormBuilder as Form, JsonService as Json, UtilService as Util};
-use app\seller\model\system\{SystemRole, SystemAdmin as AdminModel};
+use app\seller\model\system\{SystemSellerRole, SystemSellerAdmin as AdminModel};
 use think\facade\Route as Url;
 
 /**
  * 管理员列表控制器
- * Class SystemAdmin
+ * Class SystemSellerAdmin
  * @package app\seller\controller\system
  */
 class SystemAdmin extends AuthController
@@ -28,7 +28,7 @@ class SystemAdmin extends AuthController
             ['level', bcadd($admin->level, 1, 0)]
         ]);
         $this->assign('where', $where);
-        $this->assign('role', SystemRole::getRole(bcadd($admin->level, 1, 0)));
+        $this->assign('role', SystemSellerRole::getRole(bcadd($admin->level, 1, 0)));
         $this->assign(AdminModel::systemPage($where));
         return $this->fetch();
     }
@@ -47,7 +47,7 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名');
         $f[] = Form::select('roles', '管理员身份')->setOptions(function () use ($admin) {
-            $list = SystemRole::getRole(bcadd($admin->level, 1, 0));
+            $list = SystemSellerRole::getRole(bcadd($admin->level, 1, 0));
             $options = [];
             foreach ($list as $id => $roleName) {
                 $options[] = ['label' => $roleName, 'value' => $id];
@@ -107,7 +107,7 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名', $admin->real_name);
         $f[] = Form::select('roles', '管理员身份', explode(',', $admin->roles))->setOptions(function () use ($admin) {
-            $list = SystemRole::getRole($admin->level);
+            $list = SystemSellerRole::getRole($admin->level);
             $options = [];
             foreach ($list as $id => $roleName) {
                 $options[] = ['label' => $roleName, 'value' => $id];
