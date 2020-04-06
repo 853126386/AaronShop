@@ -46,6 +46,7 @@ class Login extends SystemBasic
             $error['time'] = time();
             Session::set('login_error', $error);
             Session::save();
+
             return $this->failed(SystemSellerAdmin::getErrorInfo('用户名错误，请重新输入'));
         }
     }

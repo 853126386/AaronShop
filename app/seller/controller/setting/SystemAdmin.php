@@ -27,8 +27,14 @@ class SystemAdmin extends AuthController
             ['roles', ''],
             ['level', bcadd($admin->level, 1, 0)]
         ]);
+        $where['seller_admin_id']=$admin['seller_admin_id'];
+
         $this->assign('where', $where);
-        $this->assign('role', SystemSellerRole::getRole(bcadd($admin->level, 1, 0)));
+        $role_where['level']=bcadd($admin->level, 1, 0);
+        if($admin->level==1){
+            $role_where['seller_admin_id']=$admin->seller_admin_id;
+        }
+        $this->assign('role', SystemSellerRole::getRole($role_where));
         $this->assign(AdminModel::systemPage($where));
         return $this->fetch();
     }
@@ -47,7 +53,11 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名');
         $f[] = Form::select('roles', '管理员身份')->setOptions(function () use ($admin) {
-            $list = SystemSellerRole::getRole(bcadd($admin->level, 1, 0));
+            $role_where['level']=bcadd($admin->level, 1, 0);
+            if($admin->level==1){
+                $role_where['seller_admin_id']=$admin->seller_admin_id;
+            }
+            $list = SystemSellerRole::getRole($role_where);
             $options = [];
             foreach ($list as $id => $roleName) {
                 $options[] = ['label' => $roleName, 'value' => $id];

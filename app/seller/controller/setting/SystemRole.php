@@ -26,6 +26,7 @@ class SystemRole extends AuthController
             ['role_name', ''],
         ], $this->request);
         $where['level'] = $this->adminInfo['level'];
+        $where['id'] = $this->adminInfo['id'];
         $this->assign('where', $where);
 //        dump(RoleModel::systemPage($where));exit;
         $this->assign(RoleModel::systemPage($where));
@@ -41,9 +42,9 @@ class SystemRole extends AuthController
     {
 
 //        if(0 == 0){
-//        }else{
-//            dump($this->adminInfo['level']);
-//        }
+//////        }else{
+//////            dump($this->adminInfo['level']);
+//////        }
         $menus = $this->adminInfo['level'] == 0 ? SystemSellerMenus::ruleList() : SystemSellerMenus::rolesByRuleList($this->adminInfo['roles']);
         $this->assign(['menus' => json($menus)->getContent(), 'saveUrl' => Url::buildUrl('save')]);
         return $this->fetch();
@@ -63,6 +64,7 @@ class SystemRole extends AuthController
             ['checked_menus', [], '', 'rules']
         ]);
         if (!$data['role_name']) return Json::fail('请输入身份名称');
+
         if (!is_array($data['rules']) || !count($data['rules']))
             return Json::fail('请选择最少一个权限');
         foreach ($data['rules'] as $v) {
@@ -71,6 +73,20 @@ class SystemRole extends AuthController
         }
         $data['rules'] = implode(',', $data['rules']);
         $data['level'] = $this->adminInfo['level'] + 1;
+
+//        dump($this->adminInfo['seller_admin_id']);
+//        dump($this->adminInfo['id']);
+//        dd($this->adminInfo['level']);
+
+        if($this->adminInfo['seller_admin_id']==$this->adminInfo['id']&&$this->adminInfo['level']==1){
+            //角色添加商户id
+            $data['seller_admin_id']=$this->adminInfo['id'];
+        }elseif($this->adminInfo['seller_admin_id']!=$this->adminInfo['id']&&$this->adminInfo['level']>1){
+            //限制商户管理员下的子用户添加角色
+            return Json::fail('该身份不允许添加权限！');
+        }
+
+
         if (!RoleModel::create($data)) return Json::fail('添加身份失败!');
         return Json::successful('添加身份成功!');
     }

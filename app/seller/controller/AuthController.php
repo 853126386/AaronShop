@@ -26,6 +26,8 @@ class AuthController extends SystemBasic
      */
     protected $adminId;
 
+    protected $sellerAdminId;
+
     /**
      * 当前管理员权限
      * @var array
@@ -45,6 +47,7 @@ class AuthController extends SystemBasic
         }
         $this->adminInfo = $adminInfo;
         $this->adminId = $adminInfo['id'];
+        $this->sellerAdminId = $adminInfo['seller_admin_id'];
         $this->getActiveAdminInfo();
         $this->auth = SystemSellerAdmin::activeAdminAuthOrFail();
         $this->adminInfo->level === 0 || $this->checkAuth();
