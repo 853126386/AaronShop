@@ -60,6 +60,7 @@ class StoreCategory extends BaseModel
         else if ($where['pid'] == '' && $where['cate_name'] == '') $model = $model->where('pid', 0);
         if ($where['is_show'] != '') $model = $model->where('is_show', $where['is_show']);
         if ($where['cate_name'] != '') $model = $model->where('cate_name', 'LIKE', "%$where[cate_name]%");
+        if ($where['seller_admin_id'] != '') $model = $model->where('seller_admin_id', $where['seller_admin_id']);
         if ($isAjax === true) {
             if (isset($where['order']) && $where['order'] != '') {
                 $model = $model->order(self::setOrder($where['order']));
@@ -95,9 +96,10 @@ class StoreCategory extends BaseModel
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function getTierList($model = null, $type = 0)
+    public static function getTierList($model = null, $type = 0,$seller_admin_id=0)
     {
         if ($model === null) $model = new self();
+        $model=$model->where('seller_admin_id', $seller_admin_id);
         if (!$type) return sort_list_tier($model->order('sort desc,id desc')->where('pid', 0)->select()->toArray());
         return sort_list_tier($model->order('sort desc,id desc')->select()->toArray());
     }
