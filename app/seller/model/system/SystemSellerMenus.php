@@ -145,7 +145,7 @@ class SystemSellerMenus extends BaseModel
         static $allAuth = null;
         static $adminAuth = null;
         if ($allAuth === null) $allAuth = $adminFilter == true ? SystemSellerRole::getAllAuth() : [];//所有的菜单
-        if ($adminAuth === null) $adminAuth = $adminFilter == true ? SystemSellerAdmin::activeAdminAuthOrFail() : [];//当前登录用户的菜单
+        if ($adminAuth === null) $adminAuth = $adminFilter == true ? SystemSeller::activeAdminAuthOrFail() : [];//当前登录用户的菜单
         foreach ($menusList as $k => $menu) {
             $menu = $menu->getData();
             if ($menu['pid'] == $pid) {

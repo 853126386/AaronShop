@@ -118,7 +118,7 @@ class SystemLog extends BaseModel
         if($where['admin_id'] != '')
             $adminIds = $where['admin_id'];
         else
-            $adminIds = SystemSellerAdmin::where('level','>=',$where['level'])->column('id','id');
+            $adminIds = SystemSeller::where('level','>=',$where['level'])->column('id','id');
         $model = $model->where('l.admin_id','IN',$adminIds);
         if($where['data'] !== ''){
             list($startTime,$endTime) = explode(' - ',$where['data']);

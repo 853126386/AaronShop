@@ -3,7 +3,7 @@
 namespace app\seller\controller;
 
 
-use app\seller\model\system\SystemSellerAdmin;
+use app\seller\model\system\SystemSeller;
 use crmeb\services\UtilService;
 use think\facade\Session;
 use think\facade\Route as Url;
@@ -36,7 +36,7 @@ class Login extends SystemBasic
         if ($error['num'] >= 5 && $error['time'] > strtotime('- 5 minutes'))
             return $this->failed('错误次数过多,请稍候再试!');
         //检验帐号密码
-        $res = SystemSellerAdmin::login($account, $pwd);
+        $res = SystemSeller::login($account, $pwd);
         if ($res) {
             Session::set('login_error', null);
             Session::save();
@@ -47,7 +47,7 @@ class Login extends SystemBasic
             Session::set('login_error', $error);
             Session::save();
 
-            return $this->failed(SystemSellerAdmin::getErrorInfo('用户名错误，请重新输入'));
+            return $this->failed(SystemSeller::getErrorInfo('用户名错误，请重新输入'));
         }
     }
 
@@ -62,7 +62,7 @@ class Login extends SystemBasic
      */
     public function logout()
     {
-        SystemSellerAdmin::clearLoginInfo();
+        SystemSeller::clearLoginInfo();
         $this->redirect(Url::buildUrl('index')->build());
     }
 }

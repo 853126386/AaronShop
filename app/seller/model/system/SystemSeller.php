@@ -11,10 +11,10 @@ use crmeb\basic\BaseModel;
 use think\facade\Session;
 
 /**
- * Class SystemSellerAdmin
+ * Class SystemSeller
  * @package app\seller\model\system
  */
-class SystemSellerAdmin extends BaseModel
+class SystemSeller extends BaseModel
 {
     /**
      * 数据表主键
@@ -26,7 +26,7 @@ class SystemSellerAdmin extends BaseModel
      * 模型名称
      * @var string
      */
-    protected $name = 'system_seller_admin';
+    protected $name = 'system_seller';
 
     use ModelTrait;
 
@@ -69,8 +69,8 @@ class SystemSellerAdmin extends BaseModel
      */
     public static function setLoginInfo($adminInfo)
     {
-        Session::set('sellerAdminId', $adminInfo['id']);
-        Session::set('sellerAdminInfo', $adminInfo->toArray());
+        Session::set('sellerId', $adminInfo['id']);
+        Session::set('sellerInfo', $adminInfo->toArray());
         Session::save();
     }
 
@@ -79,8 +79,8 @@ class SystemSellerAdmin extends BaseModel
      */
     public static function clearLoginInfo()
     {
-        Session::delete('sellerAdminInfo');
-        Session::delete('sellerAdminId');
+        Session::delete('sellerInfo');
+        Session::delete('sellerId');
         Session::save();
     }
 
@@ -90,7 +90,7 @@ class SystemSellerAdmin extends BaseModel
      */
     public static function hasActiveAdmin()
     {
-        return Session::has('sellerAdminId') && Session::has('sellerAdminInfo');
+        return Session::has('sellerId') && Session::has('sellerInfo');
     }
 
     /**
@@ -100,7 +100,7 @@ class SystemSellerAdmin extends BaseModel
      */
     public static function activeAdminInfoOrFail()
     {
-        $adminInfo = Session::get('sellerAdminInfo');
+        $adminInfo = Session::get('sellerInfo');
         if (!$adminInfo) exception('请登陆');
         if (!$adminInfo['status']) exception('该账号已被关闭!');
         return $adminInfo;
@@ -113,7 +113,7 @@ class SystemSellerAdmin extends BaseModel
      */
     public static function activeAdminIdOrFail()
     {
-        $adminId = Session::get('sellerAdminId');
+        $adminId = Session::get('sellerId');
         if (!$adminId) exception('访问用户为登陆登陆!');
         return $adminId;
     }

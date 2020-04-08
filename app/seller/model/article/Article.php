@@ -9,7 +9,7 @@
 namespace app\seller\model\article;
 
 use app\seller\model\store\StoreProduct;
-use app\seller\model\system\SystemSellerAdmin;
+use app\seller\model\system\SystemSeller;
 use app\models\article\ArticleContent;
 use crmeb\traits\ModelTrait;
 use crmeb\basic\BaseModel;
@@ -53,7 +53,7 @@ class Article extends BaseModel
                 $model = $model->where('mer_id', 0);
         $model = $model->where('status', 1)->where('hide', 0)->order('id desc');
         return self::page($model, function ($item) {
-            if (!$item['mer_id']) $item['admin_name'] = '总后台管理员---》' . SystemSellerAdmin::where('id', $item['admin_id'])->value('real_name');
+            if (!$item['mer_id']) $item['admin_name'] = '总后台管理员---》' . SystemSeller::where('id', $item['admin_id'])->value('real_name');
             else $item['admin_name'] = Merchant::where('id', $item['mer_id'])->value('mer_name') . '---》' . MerchantAdmin::where('id', $item['admin_id'])->value('real_name');
             $item['content'] = ArticleContent::where('nid', $item['id'])->value('content');
             $item['catename'] = ArticleCategory::where('id', $item['cid'])->value('title');

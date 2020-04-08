@@ -3,7 +3,7 @@
 namespace app\seller\controller\setting;
 
 use app\seller\controller\AuthController;
-use app\seller\model\system\{SystemSellerMenus,SystemSellerAdmin, SystemSellerRole as RoleModel};
+use app\seller\model\system\{SystemSellerMenus,SystemSeller, SystemSellerRole as RoleModel};
 use crmeb\services\{UtilService as Util, JsonService as Json};
 use think\facade\Route as Url;
 /**
@@ -20,7 +20,7 @@ class SystemRole extends AuthController
      */
     public function index()
     {
-//        dd(SystemSellerAdmin::find($this->adminId)->sellerRole->seller_admin_id);
+//        dd(SystemSeller::find($this->adminId)->sellerRole->seller_admin_id);
         $where = Util::getMore([
             ['status', ''],
             ['role_name', ''],

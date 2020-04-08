@@ -4,12 +4,12 @@ namespace app\seller\controller\setting;
 
 use app\seller\controller\AuthController;
 use crmeb\services\{FormBuilder as Form, JsonService as Json, UtilService as Util};
-use app\seller\model\system\{SystemSellerRole, SystemSellerAdmin as AdminModel};
+use app\seller\model\system\{SystemSellerRole, SystemSeller as AdminModel};
 use think\facade\Route as Url;
 
 /**
  * 管理员列表控制器
- * Class SystemSellerAdmin
+ * Class SystemSeller
  * @package app\seller\controller\system
  */
 class SystemAdmin extends AuthController
@@ -117,7 +117,7 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名', $admin->real_name);
         $f[] = Form::select('roles', '管理员身份', explode(',', $admin->roles))->setOptions(function () use ($admin) {
-            $list = SystemSellerRole::getRole($admin->level);
+            $list = SystemSellerRole::getRole(['seller_admin_id'=>$this->sellerId]);
             $options = [];
             foreach ($list as $id => $roleName) {
                 $options[] = ['label' => $roleName, 'value' => $id];

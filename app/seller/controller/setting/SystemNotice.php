@@ -3,7 +3,7 @@
 namespace app\seller\controller\setting;
 
 use app\seller\controller\AuthController;
-use app\seller\model\system\{SystemSellerAdmin, SystemNotice as NoticeModel};
+use app\seller\model\system\{SystemSeller, SystemNotice as NoticeModel};
 use crmeb\services\{JsonService, UtilService, FormBuilder as Form};
 use think\facade\Route as Url;
 
@@ -17,7 +17,7 @@ class SystemNotice extends AuthController
     public function index()
     {
         $this->assign(NoticeModel::page(function ($notice) {
-            $notice->push_admin_name = !empty($notice->push_admin) ? implode(',', SystemSellerAdmin::where('id', 'IN', $notice->push_admin)->column('real_name', 'real_name')) : '';
+            $notice->push_admin_name = !empty($notice->push_admin) ? implode(',', SystemSeller::where('id', 'IN', $notice->push_admin)->column('real_name', 'real_name')) : '';
         }));
         return $this->fetch();
     }
@@ -31,7 +31,7 @@ class SystemNotice extends AuthController
         $f[] = Form::input('template', '通知模板');
         $f[] = Form::input('table_title', '通知数据')->type('textarea')->placeholder('数据1-key1,数据2-key2');
         $f[] = Form::select('push_admin', '通知管理员')->setOptions(function () {
-            $list = SystemSellerAdmin::getOrdAdmin('real_name,id') ?: [];
+            $list = SystemSeller::getOrdAdmin('real_name,id') ?: [];
             $options = [];
             foreach ($list as $admin) {
                 $options[] = ['label' => $admin['real_name'], 'value' => $admin['id']];
@@ -81,7 +81,7 @@ class SystemNotice extends AuthController
         $f[] = Form::input('template', '通知模板', $data->template);
         $f[] = Form::input('table_title', '通知数据', $data->tableTitleStr)->type('textarea')->placeholder('数据1-key1,数据2-key2');
         $f[] = Form::select('push_admin', '通知管理员', $data->push_admin)->setOptions(function () {
-            $list = SystemSellerAdmin::getOrdAdmin('real_name,id') ?: [];
+            $list = SystemSeller::getOrdAdmin('real_name,id') ?: [];
             $options = [];
             foreach ($list as $admin) {
                 $options[] = ['label' => $admin['real_name'], 'value' => $admin['id']];

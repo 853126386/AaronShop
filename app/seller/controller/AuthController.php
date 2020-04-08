@@ -2,7 +2,7 @@
 
 namespace app\seller\controller;
 
-use app\seller\model\system\SystemSellerAdmin;
+use app\seller\model\system\SystemSeller;
 use app\seller\model\system\SystemSellerMenus;
 use app\seller\model\system\SystemSellerRole;
 use think\facade\Route as Url;
@@ -26,7 +26,7 @@ class AuthController extends SystemBasic
      */
     protected $adminId;
 
-    protected $sellerAdminId;
+    protected $storeId;
 
     /**
      * 当前管理员权限
@@ -39,17 +39,17 @@ class AuthController extends SystemBasic
     protected function initialize()
     {
         parent::initialize();
-        if (!SystemSellerAdmin::hasActiveAdmin()) return $this->redirect(Url::buildUrl('login/index')->suffix(false)->build());
+        if (!SystemSeller::hasActiveAdmin()) return $this->redirect(Url::buildUrl('login/index')->suffix(false)->build());
         try {
-            $adminInfo = SystemSellerAdmin::activeAdminInfoOrFail();
+            $adminInfo = SystemSeller::activeAdminInfoOrFail();
         } catch (\Exception $e) {
-            return $this->failed(SystemSellerAdmin::getErrorInfo($e->getMessage()), Url::buildUrl('login/index')->suffix(false)->build());
+            return $this->failed(SystemSeller::getErrorInfo($e->getMessage()), Url::buildUrl('login/index')->suffix(false)->build());
         }
         $this->adminInfo = $adminInfo;
         $this->adminId = $adminInfo['id'];
-        $this->sellerAdminId = $adminInfo['seller_admin_id'];
+        $this->storeId = $adminInfo['store_id'];
         $this->getActiveAdminInfo();
-        $this->auth = SystemSellerAdmin::activeAdminAuthOrFail();
+        $this->auth = SystemSeller::activeAdminAuthOrFail();
         $this->adminInfo->level === 0 || $this->checkAuth();
         $this->assign('_admin', $this->adminInfo);
         $type = 'system';
@@ -76,15 +76,15 @@ class AuthController extends SystemBasic
 
     /**
      * 获得当前用户最新信息
-     * @return SystemSellerAdmin
+     * @return SystemSeller
      */
     protected function getActiveAdminInfo()
     {
         $adminId = $this->adminId;
-        $adminInfo = SystemSellerAdmin::getValidAdminInfoOrFail($adminId);
-        if (!$adminInfo) $this->failed(SystemSellerAdmin::getErrorInfo('请登陆!'));
+        $adminInfo = SystemSeller::getValidAdminInfoOrFail($adminId);
+        if (!$adminInfo) $this->failed(SystemSeller::getErrorInfo('请登陆!'));
         $this->adminInfo = $adminInfo;
-        SystemSellerAdmin::setLoginInfo($adminInfo);
+        SystemSeller::setLoginInfo($adminInfo);
         return $adminInfo;
     }
 }

@@ -91,7 +91,7 @@ class SystemSellerRole extends BaseModel
 
 
     public  function sellerAdmin(){
-        return $this->hasmany('app\seller\model\system\SystemSellerAdmin','roles','id');
+        return $this->hasmany('app\seller\model\system\SystemSeller','roles','id');
     }
 
 

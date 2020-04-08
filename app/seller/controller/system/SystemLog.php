@@ -3,7 +3,7 @@
 namespace app\seller\controller\system;
 
 use app\seller\controller\AuthController;
-use app\seller\model\system\SystemSellerAdmin;
+use app\seller\model\system\SystemSeller;
 use app\seller\model\system\SystemLog as LogModel;
 use crmeb\services\UtilService as Util;
 
@@ -29,7 +29,7 @@ class SystemLog extends AuthController
         ], $this->request);
         $where['level'] = $this->adminInfo['level'];
         $this->assign('where', $where);
-        $this->assign('admin', SystemSellerAdmin::getOrdAdmin('id,real_name', $this->adminInfo['level']));
+        $this->assign('admin', SystemSeller::getOrdAdmin('id,real_name', $this->adminInfo['level']));
         $this->assign(LogModel::systemPage($where));
         return $this->fetch();
     }
