@@ -24,7 +24,7 @@ class StoreCategory extends AuthController
     public function index()
     {
         $this->assign('pid', $this->request->get('pid', 0));
-        $this->assign('cate', CategoryModel::getTierList(null, 0,$this->sellerId));
+        $this->assign('cate', CategoryModel::getTierList(null, 0,$this->storeId));
         return $this->fetch();
     }
 
@@ -41,7 +41,7 @@ class StoreCategory extends AuthController
             ['page', 1],
             ['limit', 20],
             ['order', ''],
-            ['seller_admin_id',$this->sellerId]
+            ['store_id',$this->storeId]
         ]);
 //        dd($where);
         return Json::successlayui(CategoryModel::CategoryList($where));
@@ -86,7 +86,7 @@ class StoreCategory extends AuthController
     {
         $field = [
             Form::select('pid', '父级')->setOptions(function () {
-                $list = CategoryModel::getTierList(null, 0,$this->sellerId);
+                $list = CategoryModel::getTierList(null, 0,$this->storeId);
                 $menus = [['value' => 0, 'label' => '顶级菜单']];
                 foreach ($list as $menu) {
                     $menus[] = ['value' => $menu['id'], 'label' => $menu['html'] . $menu['cate_name']];
@@ -117,7 +117,7 @@ class StoreCategory extends AuthController
             ['pic', []],
             'sort',
             ['is_show', 0],
-            ['seller_admin_id', $this->sellerId],
+            ['store_id', $this->storeId],
         ], $request);
         if ($data['pid'] == '') return Json::fail('请选择父类');
         if (!$data['cate_name']) return Json::fail('请输入分类名称');
@@ -141,7 +141,7 @@ class StoreCategory extends AuthController
         if (!$c) return Json::fail('数据不存在!');
         $field = [
             Form::select('pid', '父级', (string)$c->getData('pid'))->setOptions(function () use ($id) {
-                $list = CategoryModel::getTierList(CategoryModel::where('id', '<>', $id), 0,$this->sellerId);
+                $list = CategoryModel::getTierList(CategoryModel::where('id', '<>', $id), 0,$this->storeId);
 //                $list = (sort_list_tier((CategoryModel::where('id','<>',$id)->select()->toArray(),'顶级','pid','cate_name'));
                 $menus = [['value' => 0, 'label' => '顶级菜单']];
                 foreach ($list as $menu) {

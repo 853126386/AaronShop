@@ -83,7 +83,7 @@ class SystemSellerRole extends BaseModel
         $model = new self;
         if(strlen(trim($where['role_name']))) $model = $model->where('role_name','LIKE',"%$where[role_name]%");
         if(strlen(trim($where['status']))) $model = $model->where('status',$where['status']);
-        if(trim($where['level'])) $model = $model->where('seller_admin_id',$where['id']);
+        if(trim($where['store_id'])) $model = $model->where('store_id',$where['store_id']);
         return self::page($model,(function($item){
             $item->rules = SystemSellerMenus::where('id','IN',(string)$item->rules)->column('menu_name','id');
         }),$where);

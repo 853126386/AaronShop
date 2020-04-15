@@ -27,13 +27,12 @@ class SystemAdmin extends AuthController
             ['roles', ''],
             ['level', bcadd($admin->level, 1, 0)]
         ]);
-        $where['seller_admin_id']=$admin['seller_admin_id'];
+        $where['store_id']=$admin['store_id'];
 
         $this->assign('where', $where);
         $role_where['level']=bcadd($admin->level, 1, 0);
-        if($admin->level==1){
-            $role_where['seller_admin_id']=$admin->seller_admin_id;
-        }
+
+        $role_where['store_id']=$admin->storeId;
         $this->assign('role', SystemSellerRole::getRole($role_where));
         $this->assign(AdminModel::systemPage($where));
         return $this->fetch();
@@ -52,11 +51,13 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('pwd', '管理员密码')->type('password');
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名');
+        if ($admin->level>1) return Json::fail('当前管理员不允许添加角色');
+
         $f[] = Form::select('roles', '管理员身份')->setOptions(function () use ($admin) {
             $role_where['level']=bcadd($admin->level, 1, 0);
-            if($admin->level==1){
-                $role_where['seller_admin_id']=$admin->seller_admin_id;
-            }
+
+            $role_where['store_id']=$this->storeId;
+
             $list = SystemSellerRole::getRole($role_where);
             $options = [];
             foreach ($list as $id => $roleName) {
@@ -84,7 +85,8 @@ class SystemAdmin extends AuthController
             'pwd',
             'real_name',
             ['roles', []],
-            ['status', 0]
+            ['status', 0],
+            ['store_id', $this->storeId]
         ]);
         if (!$data['account']) return Json::fail('请输入管理员账号');
         if (!$data['roles']) return Json::fail('请选择至少一个管理员身份');
@@ -117,8 +119,8 @@ class SystemAdmin extends AuthController
         $f[] = Form::input('conf_pwd', '确认密码')->type('password');
         $f[] = Form::input('real_name', '管理员姓名', $admin->real_name);
         $f[] = Form::select('roles', '管理员身份', explode(',', $admin->roles))->setOptions(function () use ($admin) {
-            $list = SystemSellerRole::getRole(['seller_admin_id'=>$this->sellerId]);
-            $options = [];
+            $list = SystemSellerRole::getRole(['store_id'=>$this->storeId]);
+            $options = []   ;
             foreach ($list as $id => $roleName) {
                 $options[] = ['label' => $roleName, 'value' => $id];
             }

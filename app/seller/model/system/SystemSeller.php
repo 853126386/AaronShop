@@ -51,11 +51,11 @@ class SystemSeller extends BaseModel
      */
     public static function login($account, $pwd)
     {
-//        $adminInfo = self::get(compact('account'));
-        $adminInfo = self::where(compact('account'))->alias('sa')->join('eb_system_seller_role sr','sr.id=sa.roles')->field(['sa.*,sr.seller_admin_id'])->find();
+        $adminInfo = self::get(compact('account'));
+//        $adminInfo = self::where(compact('account'))->find();
 
-        //当用户是商户管理员的时候，设置seller_admin_id为自己的id
-        if($adminInfo['level']==1&&$adminInfo['seller_admin_id']==0)$adminInfo['seller_admin_id']=$adminInfo['id'];
+        //当用户是商户管理员的时候，设置store_id为自己的id
+//        if($adminInfo['level']==1&&$adminInfo['store_id']==0)$adminInfo['store_id']=$adminInfo['id'];
         if (!$adminInfo) return self::setErrorInfo('登陆的账号不存在!');
         if ($adminInfo['pwd'] != md5($pwd)) return self::setErrorInfo('账号或密码错误，请重新输入');
         if (!$adminInfo['status']) return self::setErrorInfo('该账号已被关闭!');
@@ -137,9 +137,8 @@ class SystemSeller extends BaseModel
      */
     public static function getValidAdminInfoOrFail($id)
     {
-//        $adminInfo = self::get($id);
-        $adminInfo =  self::where(['sa.id'=>$id])->alias('sa')->join('eb_system_seller_role sr','sr.id=sa.roles')->field(['sa.*,sr.seller_admin_id'])->find();
-        if($adminInfo['level']==1&&$adminInfo['seller_admin_id']==0)$adminInfo['seller_admin_id']=$adminInfo['id'];
+        $adminInfo = self::get($id);
+//        $adminInfo =  self::where(['sa.id'=>$id])->find();
         if (!$adminInfo) exception('用户不能存在!');
         if (!$adminInfo['status']) exception('该账号已被关闭!');
         return $adminInfo;
@@ -172,9 +171,8 @@ class SystemSeller extends BaseModel
         $model = new self;
         if ($where['name'] != '') $model = $model->where('account|real_name', 'LIKE', "%$where[name]%");
         if ($where['roles'] != '') $model = $model->where("CONCAT(',',roles,',')  LIKE '%,$where[roles],%'");
-        if ($where['seller_admin_id'] !=0)$model =$model->where(['seller_admin_id'=>$where['seller_admin_id']]);
-        $model = $model->alias('sa')->join('eb_system_seller_role sr','sa.roles=sr.id')->where('sa.level', $where['level'])->where('is_del', 0)->field('sa.*');
-//        $model = $model->where('level', $where['level'])->where('is_del', 0);
+        if ($where['store_id'] !=0)$model =$model->where(['store_id'=>$where['store_id']]);
+        $model = $model->where('level', $where['level'])->where('is_del', 0);
         return self::page($model, function ($admin) {
             $admin->roles = SystemSellerRole::where('id', 'IN', [$admin->roles])->column('role_name');
         }, $where);

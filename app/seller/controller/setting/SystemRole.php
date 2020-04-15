@@ -20,13 +20,14 @@ class SystemRole extends AuthController
      */
     public function index()
     {
-//        dd(SystemSeller::find($this->adminId)->sellerRole->seller_admin_id);
+//        dd(SystemSeller::find($this->adminId)->sellerRole->store_id);
         $where = Util::getMore([
             ['status', ''],
             ['role_name', ''],
         ], $this->request);
         $where['level'] = $this->adminInfo['level'];
         $where['id'] = $this->adminInfo['id'];
+        $where['store_id'] = $this->storeId;
         $this->assign('where', $where);
 //        dump(RoleModel::systemPage($where));exit;
         $this->assign(RoleModel::systemPage($where));
@@ -71,17 +72,12 @@ class SystemRole extends AuthController
             $pid = SystemSellerMenus::where('id', $v)->value('pid');
             if (!in_array($pid, $data['rules'])) $data['rules'][] = $pid;
         }
+
         $data['rules'] = implode(',', $data['rules']);
         $data['level'] = $this->adminInfo['level'] + 1;
+        $data['store_id']=$this->storeId;
 
-//        dump($this->adminInfo['seller_admin_id']);
-//        dump($this->adminInfo['id']);
-//        dd($this->adminInfo['level']);
-
-        if($this->adminInfo['seller_admin_id']==$this->adminInfo['id']&&$this->adminInfo['level']==1){
-            //角色添加商户id
-            $data['seller_admin_id']=$this->adminInfo['id'];
-        }elseif($this->adminInfo['seller_admin_id']!=$this->adminInfo['id']&&$this->adminInfo['level']>1){
+       if($this->adminInfo['level']>1){
             //限制商户管理员下的子用户添加角色
             return Json::fail('该身份不允许添加权限！');
         }
